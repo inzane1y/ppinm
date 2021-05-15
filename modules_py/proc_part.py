@@ -1,4 +1,4 @@
-# proc.py
+# proc_part.py
 
 P_DFLT = 'dflt'
 P_REAL = 'real'

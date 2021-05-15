@@ -8,12 +8,9 @@
 
 int main(int argc, char **argv)
 {
-    rf_func = eq_pnd;
-    rf_x0 = 2.4;
     rf_z0 = 1.;
-    list_double_print(stripe_bisect_y(0, 6));
-    printf("eq(...) = %lf\n", eq_pnd(2.4, 2.166525, 1.));
-    /* printf("%d\n", rf_n_bisect); */
+    rf_func = eq_pnd;
+    rf_roots_to_file_y(1e-9, 5, 0, 6);
 
     return 0;
 }

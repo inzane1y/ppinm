@@ -6,6 +6,7 @@ import modules_py.proc_part as p
 # _dx === derivative with respect to x
 # _as === asymptote
 
+# Parameters
 M = 6.67
 F_DELTA = 1.7
 F = 1

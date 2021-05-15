@@ -6,5 +6,5 @@
 
 double bisect_y(double y1, double y2);
 list_double *stripe_bisect_y(double y1, double y2);
-void rf_roots_to_file(double x1, double x2, double y1, double y2);
+void rf_roots_to_file_y(double x1, double x2, double y1, double y2);
 #endif

@@ -1,4 +1,7 @@
+# functions.py
+
 import numpy as np
+import proc as p
 
 # _dx === derivative with respect to x
 # _as === asymptote
@@ -124,30 +127,34 @@ def eq0(k, w):
     '''Equation for free pion.'''
     return w ** 2 - w0(k) ** 2
 
-def eq_pnn(k, w, pf):
+def eq_pnn(k, w, pf, pi_part=p.P_DFLT):
     '''Equation for pNN interaction.'''
-    return eq0(k, w) - pi(k, w, pf)
+    pi_tmp = p.part(pi, pi_part, k, w, pf)
+    return eq0(k, w) - pi_tmp
 
-def eq_pnd(k, w, pf):
+def eq_pnd(k, w, pf, pi_delta_part=p.P_DFLT):
     '''Equation for pND interaction.'''
-    return eq0(k, w) - pi_delta(k, w, pf)
+    pi_delta_tmp = p.part(pi_delta, pi_delta_part, k, w, pf)
+    return eq0(k, w) - pi_delta_tmp
 
-def eq(k, w, pf):
+def eq(k, w, pf, pi_part=p.P_DFLT, pi_delta_part=p.P_DFLT):
     '''Equation with all interactions.'''
-    return eq0(k, w) - pi(k, w, pf) - pi_delta(k, w, pf)
+    pi_tmp = p.part(pi, pi_part, k, w, pf)
+    pi_delta_tmp = p.part(pi_delta, pi_delta_part, k, w, pf)
+    return eq0(k, w) - pi_tmp - pi_delta_tmp
 
 def d0(k, w):
     '''Propagator for free pion.'''
     return 1 / eq0(k, w)
 
-def d_pnn(k, w, pf, width=1e-2):
+def d_pnn(k, w, pf, width=1e-2, pi_part=p.P_DFLT):
     '''Propagator for pNN interacting pion.'''
-    return 1 / (eq_pnn(k, w, pf) - 1j * width)
+    return 1 / (eq_pnn(k, w, pf, pi_part=pi_part) - 1j * width)
 
-def d_pnd(k, w, pf, width=1e-2):
+def d_pnd(k, w, pf, width=1e-2, pi_delta_part=p.P_DFLT):
     '''Propagator for pND interacting pion.'''
-    return 1 / (eq_pnd(k, w, pf) - 1j * width)
+    return 1 / (eq_pnd(k, w, pf, pi_delta_part=pi_delta_part) - 1j * width)
 
-def d(k, w, pf, width=1e-2):
+def d(k, w, pf, width=1e-2, pi_part=p.P_DFLT, pi_delta_part=p.P_DFLT):
     '''Propagator for pion in total.'''
-    return 1 / (eq(k, w, pf) - 1j * width)
+    return 1 / (eq(k, w, pf, pi_part=pi_part, pi_delta_part=pi_delta_part) - 1j * width)

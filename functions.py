@@ -94,6 +94,16 @@ def w_as(k, pf, branch=1):
         np.sqrt((w_delta(k) ** 2 + w0(k) ** 2) ** 2 - 4 * w_quad_tmp)))
 
 # Additional functions
+def s(k, w, pf, pi_delta_dw_part=p.P_DFLT):
+    '''One term of S(k).'''
+    pi_delta_dw_tmp = p.part(pi_delta_dw, pi_delta_dw_part, k, w, pf)
+    return 2 * w / (2 * w - pi_delta_dw_tmp)
+
+def s_as(k, pf, branch=1):
+    '''One term of S(k) asymptotic.'''
+    w_as_tmp = w_as(k, pf, branch=branch)
+    return 2 * w_as_tmp / (2 * w_as_tmp - pi_delta_as_dw(k, w_as_tmp, pf))
+
 def gamma(k, w, pf):
     '''Gamma.'''
     return 2 * w0(k) / (2 * w - pi_delta_dw(k, w, pf))

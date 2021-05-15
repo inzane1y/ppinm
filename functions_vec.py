@@ -1,0 +1,33 @@
+import functions as f
+import numpy as np
+
+# Auxiliary functions
+w0 = np.vectorize(f.w0)
+
+# Main functions
+pi = np.vectorize(f.pi, excluded=['pf'])
+pi_as = np.vectorize(f.pi_as, excluded=['pf'])
+
+pi_delta = np.vectorize(f.pi_delta, excluded=['pf'])
+pi_delta_as = np.vectorize(f.pi_delta_as, excluded=['pf'])
+pi_delta_dw = np.vectorize(f.pi_delta_dw, excluded=['pf'])
+pi_delta_as_dw = np.vectorize(f.pi_delta_as_dw, excluded=['pf'])
+
+w_as = np.vectorize(f.w_as, excluded=['branch', 'pf'])
+
+# Additional functions
+gamma = np.vectorize(f.gamma, excluded=['pf'])
+gamma_as = np.vectorize(f.gamma_as, excluded=['branch', 'pf'])
+gamma_ff = np.vectorize(f.gamma_ff, excluded=['pf'])
+gamma_ff_as = np.vectorize(f.gamma_ff_as, excluded=['branch', 'pf'])
+
+# Convenience functions
+eq0 = np.vectorize(f.eq0)
+eq_pnd = np.vectorize(f.eq_pnd, excluded=['pf'])
+eq_pnn = np.vectorize(f.eq_pnn, excluded=['pf'])
+eq = np.vectorize(f.eq, excluded=['pf'])
+
+d0 = np.vectorize(f.d0)
+d_pnn = np.vectorize(f.d_pnn, excluded=['pf', 'width'])
+d_pnd = np.vectorize(f.d_pnd, excluded=['pf', 'width'])
+d = np.vectorize(f.d, excluded=['pf', 'width'])

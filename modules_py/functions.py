@@ -1,7 +1,7 @@
 # functions.py
 
 import numpy as np
-import proc as p
+import modules_py.proc_part as p
 
 # _dx === derivative with respect to x
 # _as === asymptote

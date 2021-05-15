@@ -1,5 +1,7 @@
-import functions as f
+import modules_py.functions as f
 import numpy as np
+
+k = np.r_[1e-9:5:1000j]
 
 # Auxiliary functions
 w0 = np.vectorize(f.w0)

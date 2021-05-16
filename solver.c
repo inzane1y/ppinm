@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    rf_z0 = 1.;
+    rf_z0 = 1.; // pf
     rf_func = eq_pnd;
     rf_roots_to_file_y(1e-9, 5, 0, 6);
 

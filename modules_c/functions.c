@@ -33,6 +33,12 @@ double phi0(double k, double w, double pf)
         bb * bb) / 2. * log(fabs((aa + bb) / (aa - bb))) - aa * bb);
 }
 
+double pi(double k, double w, double pf)
+{
+    return -4 * F * F * k * k * 
+        phi0(k, w, pf) + phi0(-k, -w, pf);
+}
+
 double pi_delta(double k, double w, double pf)
 {
     return -16. / 9. * F_DELTA * F_DELTA * k * k *
@@ -48,5 +54,10 @@ double eq0(double k, double w)
 double eq_pnd(double k, double w, double pf)
 {
     return eq0(k, w) - pi_delta(k, w, pf);
+}
+
+double eq_pnn(double k, double w, double pf)
+{
+    return eq0(k, w) - pi(k, w, pf);
 }
 

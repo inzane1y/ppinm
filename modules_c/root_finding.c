@@ -1,6 +1,8 @@
 // root_finding.c
 
 #include <math.h>
+#include <sys/stat.h>
+/* #include <unistd.h> */
 
 #include "list_double.h"
 
@@ -9,6 +11,7 @@ int RF_BISECT_NO_ROOTS = 0;
 
 // Function runtime parameters
 FILE *rf_file_current_output;
+char rf_dir_name[100] = "graph_data";
 double (*rf_func)(double x, double y, double z);
 double rf_x0 = 0, rf_y0 = 0, rf_z0 = 0;
 double rf_prec_bisect = 1e-4;
@@ -16,6 +19,7 @@ double rf_step_strip = 1e-4;
 double rf_step_print = 1e-2;
 int rf_n_bisect = 1;
 
+// Implemtentation
 double rf_double_bisect_y(double y1, double y2)
 {
     RF_BISECT_NO_ROOTS = 0;
@@ -70,23 +74,35 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
 {
     rf_n_bisect = (int)(1. + log(rf_step_strip / rf_prec_bisect) / log(2));
     double x = x1;
-    int flag_after_encounter = 0;
-    int branch_counter = 0;
+    int branch_counter = 1;
+    int prev_used = -1;
     char file_name[100];
 
-    sprintf(file_name, "graph_data_%d_%4.2lf.txt", branch_counter, rf_z0);
-    printf("%s\n", file_name);
+    // This should probably be in a separate file
+    struct stat st = {0};
+    if (stat(rf_dir_name, &st) == -1)
+        mkdir(rf_dir_name, 0700);
+
+    sprintf(file_name, "%s/graph_data_%4.2lf_%d.txt", rf_dir_name, rf_z0, branch_counter);
     rf_file_current_output = fopen(file_name, "w+");
 
     while (x < x2)
     {
         rf_x0 = x;
         list_double *roots = rf_stripe_bisect_y(y1, y2);
+        if (roots->used != prev_used && prev_used != -1)
+        {
+            fclose(rf_file_current_output);
+            sprintf(file_name, "%s/graph_data_%4.2lf_%d.txt", rf_dir_name, rf_z0, ++branch_counter);
+            rf_file_current_output = fopen(file_name, "w+");
+        }
         fprintf(rf_file_current_output, "%lf", x);
         list_double_file(rf_file_current_output, roots);
 
         x += rf_step_print;
+        prev_used = roots->used;
         list_double_delete(&roots);
     }
+    fclose(rf_file_current_output);
 }
 

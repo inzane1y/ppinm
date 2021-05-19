@@ -30,15 +30,6 @@ double w0(double k)
     return sqrt(1 + k * k);
 }
 
-/* double phi0(double k, double w, double pf) */
-/* { */
-/*     double aa = a(k, w); */
-/*     double bb = b(k, pf); */
-
-/*     return M * M * M / (k * k * k * 4. * M_PI * M_PI) * ((aa * aa - */ 
-/*         bb * bb) / 2. * log(fabs((aa + bb) / (aa - bb))) - aa * bb); */
-/* } */
-
 double complex phi0(double k, double w, double pf)
 {
     double aa = a(k, w);

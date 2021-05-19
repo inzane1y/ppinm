@@ -15,8 +15,8 @@ char rf_dir_name[100] = "graph_data";
 double (*rf_func)(double x, double y, double z);
 double rf_x0 = 0, rf_y0 = 0, rf_z0 = 0;
 double rf_prec_bisect = 1e-4;
-double rf_step_strip = 1e-4;
-double rf_step_print = 1e-2;
+double rf_step_strip = 1e-2;
+double rf_step_print = 1e-4;
 int rf_n_bisect = 1;
 
 // Implemtentation

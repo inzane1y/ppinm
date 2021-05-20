@@ -80,7 +80,7 @@ def pi_delta_as(k, w, pf):
 def pi_delta_dw(k, w, pf):
     '''Polarization operator for pND interaction derivative.'''
     return -16 / 9 * F_DELTA ** 2 * k ** 2 * \
-        (phi0_dw(k, w - W_DELTA, pf) + phi0_dw(-k, -w - W_DELTA, pf))
+        (phi0_dw(k, w - W_DELTA, pf) - phi0_dw(-k, -w - W_DELTA, pf))
 
 def pi_delta_as_dw(k, w, pf):
     '''Polarization operator for pND interaction asymptote derivative.'''

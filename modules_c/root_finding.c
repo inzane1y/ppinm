@@ -96,8 +96,11 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
             sprintf(file_name, "%s/graph_data_%4.2lf_%d.txt", rf_dir_name, rf_z0, ++branch_counter);
             rf_file_current_output = fopen(file_name, "w+");
         }
-        fprintf(rf_file_current_output, "%lf", x);
-        list_double_file(rf_file_current_output, roots);
+        if (roots->used != 0)
+        {
+            fprintf(rf_file_current_output, "%lf", x);
+            list_double_file(rf_file_current_output, roots);
+        }
 
         x += rf_step_print;
         prev_used = roots->used;

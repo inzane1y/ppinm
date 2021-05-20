@@ -42,7 +42,7 @@ double complex phi0(double k, double w, double pf)
 double complex pi(double k, double w, double pf)
 {
     return -4 * F * F * k * k * 
-        phi0(k, w, pf) + phi0(-k, -w, pf);
+        (phi0(k, w, pf) + phi0(-k, -w, pf));
 }
 
 double complex pi_delta(double k, double w, double pf)
@@ -60,13 +60,13 @@ double eq0(double k, double w)
 double eq_pnd(double k, double w, double pf)
 {
     double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part_pi_delta, k, w, pf);
-    return eq0(k, w) - pi_delta(k, w, pf);
+    return eq0(k, w) - pi_delta_tmp;
 }
 
 double eq_pnn(double k, double w, double pf)
 {
     double pi_tmp = pp_get_part(pi, funcs_param_part_pi, k, w, pf);
-    return eq0(k, w) - pi(k, w, pf);
+    return eq0(k, w) - pi_tmp;
 }
 
 double eq(double k, double w, double pf)

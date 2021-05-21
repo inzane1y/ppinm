@@ -67,6 +67,11 @@ def pi_as(k, w, pf):
     return -4 * F ** 2 * k ** 2 * \
         (phi0_as(k, w, pf) + phi0(-k, -w, pf))
 
+def pi_dw(k, w, pf):
+    '''Polarization operator for pNN interaction derivative.'''
+    return -4 * F ** 2 * k ** 2 * \
+        (phi0_dw(k, w, pf) - phi0_dw(-k, -w, pf))
+
 def pi_delta(k, w, pf):
     '''Polarization operator for pND interaction.'''
     return -16 / 9 * F_DELTA ** 2 * k ** 2 * \

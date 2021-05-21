@@ -1,3 +1,5 @@
+# spectrum_1.52.py
+
 import modules_py.functions as f
 import modules_py.functions_vec as fv
 import modules_py.proc_image as pi
@@ -16,15 +18,11 @@ def d_pnd_w_imag(k, w):
 K, W = np.meshgrid(fv.k, fv.w)
 F = d_pnd_w_imag(K, W)
 _, F_lower = aux.split(K, W, F, .5, 1.4)
-F = d_pnd_w_imag(K, W)
 F_upper, _ = aux.split(K, W, F, .03, 2.1)
 
-F = d_pnd_w_imag(K, W)
 _, F_lower_bound = aux.split(K, W, F, .5, 1.8)
-F = d_pnd_w_imag(K, W)
 F_upper_bound, _ = aux.split(K, W, F, .2, 1.7)
 
-F = d_pnd_w_imag(K, W) # This is redone
 w_upper = np.array([])
 w_upper_bound_upper = np.array([])
 w_upper_bound_lower = np.array([])
@@ -73,6 +71,7 @@ plt.plot(fv.k, fv.w_as(fv.k, pf, branch=1), color=color_dark_grey,
     label=r'$\omega^{(as)}(k)$', ls='dotted')
 plt.plot(fv.k, fv.w_as(fv.k, pf, branch=-1), color=color_dark_grey, ls='dotted')
 
+plt.title(r'Spectrum with real part, $p_F = 1.52$')
 plt.xlabel(r'$k$')
 plt.ylabel(r'$\omega$')
 pi.show('figures/spectrum_1.52')

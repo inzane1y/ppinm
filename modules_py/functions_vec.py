@@ -32,6 +32,7 @@ gamma_ff_as = np.vectorize(f.gamma_ff_as, excluded=['branch', 'pf'])
 # Convenience functions
 eq0 = np.vectorize(f.eq0)
 eq_pnn = np.vectorize(f.eq_pnn, excluded=['pf', 'pi_part'])
+eq_pnn_as = np.vectorize(f.eq_pnn_as, excluded=['pf'])
 eq_pnd = np.vectorize(f.eq_pnd, excluded=['pf', 'pi_delta_part'])
 eq = np.vectorize(f.eq, excluded=['pf', 'pi_part', 'pi_delta_part'])
 

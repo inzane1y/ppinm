@@ -46,6 +46,8 @@ double rf_double_bisect_y(double y1, double y2)
         f_m = rf_func(rf_x0, m, rf_z0);
     }
 
+    if (fabs(f_m) > 1.)
+        RF_BISECT_NO_ROOTS = 1;
     return (y1 + y2) / 2;
 }
 

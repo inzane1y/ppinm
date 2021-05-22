@@ -14,7 +14,7 @@
 char funcs_param_part_pi_delta = 'd';
 char funcs_param_part_pi = 'd';
 
-// Implementations
+// Auxiliary functions
 double a(double k, double w)
 {
     return w - k * k / (2 * M);
@@ -30,6 +30,13 @@ double w0(double k)
     return sqrt(1 + k * k);
 }
 
+double n0(double pf)
+{
+    return pf * pf * pf / (6 * M_PI * M_PI);
+}
+
+
+// Main building blocks
 double complex phi0(double k, double w, double pf)
 {
     double aa = a(k, w);
@@ -39,10 +46,22 @@ double complex phi0(double k, double w, double pf)
         bb * bb) / 2. * clog(0 * I + (aa + bb) / (aa - bb)) - aa * bb);
 }
 
+double phi0_as(double k, double w, double pf)
+{
+    return -n0(pf) / a(k, w);
+}
+
+// Main functions
 double complex pi(double k, double w, double pf)
 {
     return -4 * F * F * k * k * 
         (phi0(k, w, pf) + phi0(-k, -w, pf));
+}
+
+double pi_as(double k, double w, double pf)
+{
+    return -4 * F * F * k * k * 
+        (phi0_as(k, w, pf) + phi0_as(-k, -w, pf));
 }
 
 double complex pi_delta(double k, double w, double pf)
@@ -51,6 +70,7 @@ double complex pi_delta(double k, double w, double pf)
         (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf));
 }
 
+// Convenience functions
 double eq0(double k, double w)
 {
     double w0_tmp = w0(k);
@@ -69,10 +89,14 @@ double eq_pnn(double k, double w, double pf)
     return eq0(k, w) - pi_tmp;
 }
 
+double eq_pnn_as(double k, double w, double pf)
+{
+    return eq0(k, w) - pi_as(k, w, pf);
+}
+
 double eq(double k, double w, double pf)
 {
     double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part_pi_delta, k, w, pf);
     double pi_tmp = pp_get_part(pi, funcs_param_part_pi, k, w, pf);
     return eq0(k, w) - pi_delta_tmp - pi_tmp;
 }
-

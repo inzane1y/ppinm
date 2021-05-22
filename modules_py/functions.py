@@ -65,7 +65,7 @@ def pi(k, w, pf):
 def pi_as(k, w, pf):
     '''Polarization operator for pNN interaction asymptote.'''
     return -4 * F ** 2 * k ** 2 * \
-        (phi0_as(k, w, pf) + phi0(-k, -w, pf))
+        (phi0_as(k, w, pf) + phi0_as(-k, -w, pf))
 
 def pi_dw(k, w, pf):
     '''Polarization operator for pNN interaction derivative.'''
@@ -147,6 +147,10 @@ def eq_pnn(k, w, pf, pi_part=p.P_DFLT):
     '''Equation for pNN interaction.'''
     pi_tmp = p.part(pi, pi_part, k, w, pf)
     return eq0(k, w) - pi_tmp
+
+def eq_pnn_as(k, w, pf):
+    '''Equation for pNN interaction asymptote.'''
+    return eq0(k, w) - pi_as(k, w, pf)
 
 def eq_pnd(k, w, pf, pi_delta_part=p.P_DFLT):
     '''Equation for pND interaction.'''

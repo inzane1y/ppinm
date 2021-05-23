@@ -7,7 +7,7 @@
 // Macros
 #define M 6.67
 #define F_DELTA 1.7
-#define F 1
+#define F 1.
 #define W_DELTA 2.1
 
 // Runtime variables
@@ -17,7 +17,7 @@ char funcs_param_part_pi = 'd';
 // Auxiliary functions
 double a(double k, double w)
 {
-    return w - k * k / (2 * M);
+    return w - k * k / (2. * M);
 }
 
 double b(double k, double pf)
@@ -27,12 +27,12 @@ double b(double k, double pf)
 
 double w0(double k)
 {
-    return sqrt(1 + k * k);
+    return sqrt(1. + k * k);
 }
 
 double n0(double pf)
 {
-    return pf * pf * pf / (6 * M_PI * M_PI);
+    return pf * pf * pf / (6. * M_PI * M_PI);
 }
 
 
@@ -43,7 +43,7 @@ double complex phi0(double k, double w, double pf)
     double bb = b(k, pf);
 
     return M * M * M / (k * k * k * 4. * M_PI * M_PI) * ((aa * aa - 
-        bb * bb) / 2. * clog(0 * I + (aa + bb) / (aa - bb)) - aa * bb);
+        bb * bb) / 2. * clog(0. * I + (aa + bb) / (aa - bb)) - aa * bb);
 }
 
 double phi0_as(double k, double w, double pf)
@@ -54,13 +54,13 @@ double phi0_as(double k, double w, double pf)
 // Main functions
 double complex pi(double k, double w, double pf)
 {
-    return -4 * F * F * k * k * 
+    return -4. * F * F * k * k * 
         (phi0(k, w, pf) + phi0(-k, -w, pf));
 }
 
 double pi_as(double k, double w, double pf)
 {
-    return -4 * F * F * k * k * 
+    return -4. * F * F * k * k * 
         (phi0_as(k, w, pf) + phi0_as(-k, -w, pf));
 }
 

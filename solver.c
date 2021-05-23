@@ -9,13 +9,18 @@
 
 int main(int argc, char **argv)
 {
-    rf_z0 = 1.52; // pf
-    sprintf(rf_dir_name, "graph_data_eq_pnn_as");
     rf_step_print = 1e-4;
     funcs_param_part_pi = 'r';
     funcs_param_part_pi_delta = 'r';
-    rf_func = eq_pnn_as;
-    rf_roots_to_file_y(-5 + 1e-9, 5, -6, 6);
+    rf_func = eq;
+
+    double pf[] = {.89, 1.52, 1.91, 2.19, 2.41};
+    for (int i = 0; i < 5; i++)
+    {
+        rf_z0 = pf[i]; // pf
+        sprintf(rf_dir_name, "graph_data/eq_real_%4.2lf", pf[i]);
+        rf_roots_to_file_y(1e-9, 5, 0, 6);
+    }
 
     return 0;
 }

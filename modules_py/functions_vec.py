@@ -6,6 +6,8 @@ import numpy as np
 k = np.r_[1e-9:5:1000j]
 w = np.r_[1e-9:6:1000j]
 
+K, W = np.meshgrid(k, w)
+
 # Auxiliary functions
 w0 = np.vectorize(f.w0)
 

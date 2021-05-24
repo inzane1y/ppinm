@@ -15,21 +15,22 @@ color_dark_grey = '#363636'
 alpha = .2
 
 graph_data = 'graph_data'
-function_name = 'eq_pnn_real'
+function_name = 'eq_pnn_real_i'
 working_dir = graph_data + '/' + function_name
 PF = os.listdir(working_dir)
 
 for pf in PF:
     pi.plot(working_dir + '/' + pf,
-        label=r'$\omega(k)$', color=color_dark_grey)
+        label=r'$x(k)$, ($\omega = ix$)', color=color_dark_grey)
     plt.title(
-        r'$\Re (w^2 - k^2 - 1 - \Pi_{\pi NN} - '
-        r'\Pi_{\pi N \Delta}) = 0$, $p_F = ' + pf + r'$'
+        r'$\Re (w^2 - k^2 - 1 - \Pi_{\pi NN}'
+        # r'- \Pi_{\pi N \Delta}'
+        r') = 0$, $p_F = '+ pf + r'$'
     )
-    plt.contourf(fv.K, fv.W, fv.pi(fv.K, fv.W, float(pf)).imag > 0,
-        alpha=alpha, cmap=cmap_pi)
+    # plt.contourf(fv.K, fv.W, fv.pi(fv.K, fv.W, float(pf)).imag > 0,
+    #     alpha=alpha, cmap=cmap_pi)
     # plt.contourf(fv.K, fv.W, fv.pi_delta(fv.K, fv.W, float(pf)).imag > 0,
     #     alpha=alpha, cmap=cmap_pi_delta)
     plt.xlabel(r'$k$')
-    plt.ylabel(r'$\omega$')
+    plt.ylabel(r'$x$, ($\omega = ix$)')
     pi.show('figures/' + function_name + '_' + pf)

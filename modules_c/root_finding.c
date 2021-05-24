@@ -1,6 +1,7 @@
 // root_finding.c
 
 #include <math.h>
+#include <complex.h>
 #include <sys/stat.h>
 /* #include <unistd.h> */
 
@@ -10,19 +11,27 @@
 int RF_BISECT_NO_ROOTS = 0;
 
 // Function runtime parameters
+int rf_axis_imag = 0;
 FILE *rf_file_current_output;
 char rf_dir_name[100] = "graph_data";
-double (*rf_func)(double x, double y, double z);
+double (*rf_func)(double x, complex double y, double z);
 double rf_x0 = 0, rf_y0 = 0, rf_z0 = 0;
 double rf_prec_bisect = 1e-4;
 double rf_step_strip = 1e-2;
 double rf_step_print = 1e-4;
 int rf_n_bisect = 1;
 
+double complex make_imag()
+{
+    return 1 * (1 - rf_axis_imag) + I * rf_axis_imag;
+}
+
 // Implemtentation
-double rf_double_bisect_y(double y1, double y2)
+double rf_double_bisect_y(double y1_arg, double y2_arg)
 {
     RF_BISECT_NO_ROOTS = 0;
+    double complex y1 = y1_arg * make_imag();
+    double complex y2 = y2_arg * make_imag();
 
     double f_a = rf_func(rf_x0, y1, rf_z0);
 
@@ -32,7 +41,7 @@ double rf_double_bisect_y(double y1, double y2)
         return 0;
     }
 
-    double m = (y2 + y1) / 2;
+    double complex m = (y2 + y1) / 2.;
     double f_m = rf_func(rf_x0, m, rf_z0);
 
     for (int i = 0; i < rf_n_bisect; i++)
@@ -42,13 +51,15 @@ double rf_double_bisect_y(double y1, double y2)
         else
             y1 = m;
 
-        m = (y1 + y2) / 2;
+        m = (y1 + y2) / 2.;
         f_m = rf_func(rf_x0, m, rf_z0);
     }
 
     if (fabs(f_m) > 1.)
         RF_BISECT_NO_ROOTS = 1;
-    return (y1 + y2) / 2;
+    if (rf_axis_imag)
+        return cimag(y1 + y2) / 2.;
+    return creal(y1 + y2) / 2.;
 }
 
 list_double *rf_stripe_bisect_y(double y1, double y2)
@@ -102,6 +113,10 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
         {
             fprintf(rf_file_current_output, "%lf", x);
             list_double_file(rf_file_current_output, roots);
+        }
+        else // Rework this
+        {
+            fprintf(rf_file_current_output, "%lf\n", x);
         }
 
         x += rf_step_print;

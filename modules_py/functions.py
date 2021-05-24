@@ -146,7 +146,8 @@ def eq0(k, w):
 def eq_pnn(k, w, pf, pi_part=p.P_DFLT):
     '''Equation for pNN interaction.'''
     pi_tmp = p.part(pi, pi_part, k, w, pf)
-    return eq0(k, w) - pi_tmp
+    eq0_tmp = p.part(eq0, pi_part, k, w)
+    return eq0_tmp - pi_tmp
 
 def eq_pnn_as(k, w, pf):
     '''Equation for pNN interaction asymptote.'''

@@ -11,11 +11,10 @@
 #define W_DELTA 2.1
 
 // Runtime variables
-char funcs_param_part_pi_delta = 'd';
-char funcs_param_part_pi = 'd';
+char funcs_param_part = 'd';
 
 // Auxiliary functions
-double a(double k, double w)
+double complex a(double k, double complex w)
 {
     return w - k * k / (2. * M);
 }
@@ -37,7 +36,7 @@ double n0(double pf)
 
 
 // Main building blocks
-double complex phi0(double k, double w, double pf)
+double complex phi0(double k, double complex w, double pf)
 {
     double aa = a(k, w);
     double bb = b(k, pf);
@@ -46,57 +45,62 @@ double complex phi0(double k, double w, double pf)
         bb * bb) / 2. * clog(0. * I + (aa + bb) / (aa - bb)) - aa * bb);
 }
 
-double phi0_as(double k, double w, double pf)
+double complex phi0_as(double k, double complex w, double pf)
 {
     return -n0(pf) / a(k, w);
 }
 
 // Main functions
-double complex pi(double k, double w, double pf)
+double complex pi(double k, double complex w, double pf)
 {
     return -4. * F * F * k * k * 
         (phi0(k, w, pf) + phi0(-k, -w, pf));
 }
 
-double pi_as(double k, double w, double pf)
+double complex pi_as(double k, double complex w, double pf)
 {
     return -4. * F * F * k * k * 
         (phi0_as(k, w, pf) + phi0_as(-k, -w, pf));
 }
 
-double complex pi_delta(double k, double w, double pf)
+double complex pi_delta(double k, double complex w, double pf)
 {
     return -16. / 9. * F_DELTA * F_DELTA * k * k *
         (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf));
 }
 
 // Convenience functions
-double eq0(double k, double w)
+double complex eq0(double k, double complex w, double pf)
 {
     double w0_tmp = w0(k);
     return w * w - w0_tmp * w0_tmp;
 }
 
-double eq_pnd(double k, double w, double pf)
+double eq_pnd(double k, double complex w, double pf)
 {
-    double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part_pi_delta, k, w, pf);
-    return eq0(k, w) - pi_delta_tmp;
+    double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part, k, w, pf);
+    double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
+    return eq0(k, w, pf) - pi_delta_tmp;
 }
 
-double eq_pnn(double k, double w, double pf)
+double eq_pnn(double k, double complex w, double pf)
 {
-    double pi_tmp = pp_get_part(pi, funcs_param_part_pi, k, w, pf);
-    return eq0(k, w) - pi_tmp;
+    double pi_tmp = pp_get_part(pi, funcs_param_part, k, w, pf);
+    double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
+    return eq0(k, w, pf) - pi_tmp;
 }
 
-double eq_pnn_as(double k, double w, double pf)
+double eq_pnn_as(double k, double complex w, double pf)
 {
-    return eq0(k, w) - pi_as(k, w, pf);
+    double pi_as_tmp = pp_get_part(pi_as, funcs_param_part, k, w, pf);
+    double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
+    return eq0(k, w, pf) - pi_as_tmp;
 }
 
-double eq(double k, double w, double pf)
+double eq(double k, double complex w, double pf)
 {
-    double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part_pi_delta, k, w, pf);
-    double pi_tmp = pp_get_part(pi, funcs_param_part_pi, k, w, pf);
-    return eq0(k, w) - pi_delta_tmp - pi_tmp;
+    double pi_delta_tmp = pp_get_part(pi_delta, funcs_param_part, k, w, pf);
+    double pi_tmp = pp_get_part(pi, funcs_param_part, k, w, pf);
+    double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
+    return eq0(k, w, pf) - pi_delta_tmp - pi_tmp;
 }

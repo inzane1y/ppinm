@@ -2,8 +2,8 @@
 
 #include <complex.h>
 
-double pp_get_part(double complex (*func)(double, complex double, double),
-    char p, double x, double y, double z)
+double pp_get_part(double complex (*func)(double, double complex, double),
+    char p, double x, double complex y, double z)
 {
     switch (p)
     {

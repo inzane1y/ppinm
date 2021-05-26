@@ -24,3 +24,4 @@ def plot(file_dir, label=None, ls=None, color='#363636'):
                 plt.plot(x, y, ls=ls, color=color)
             else:
                 plt.plot(x, y, ls=ls, color=color, label=label)
+                flag_label_present = True

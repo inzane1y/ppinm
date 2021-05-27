@@ -10,13 +10,13 @@
 int main(int argc, char **argv)
 {
     rf_axis_imag = 0;
-    rf_step_print = 5e-3;
-    rf_step_strip = 1e-2;
+    rf_step_print = 1e-4;
+    rf_step_strip = 1e-3;
     funcs_param_part = 'r';
-    rf_func = eq_pnd;
+    rf_func = eq;
 
     char func_name[100];
-    sprintf(func_name, "eq_pnd_real");
+    sprintf(func_name, "eq_real");
 
     /* double pf[] = {.89, 1.52, 1.91, 2.19, 2.41}; */
     double pf[] = {2.7};

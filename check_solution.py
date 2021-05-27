@@ -5,8 +5,8 @@ import modules_py.proc_data as pd
 import os
 import matplotlib.pyplot as plt
 
-pf = 1.52
-dir_name = 'graph_data_eq_pnn_as'
+pf = 2.7
+dir_name = 'graph_data/eq_pnn_as/' + str(pf)
 filenames = os.listdir(dir_name)
 
 for filename in filenames:

@@ -54,9 +54,10 @@ for i_filename in i_filenames:
 
 
 cmap_pi = ListedColormap(['#ffffff00', '#a1ae25']) # Green
-# cmap_pi_delta = ListedColormap(['#ffffff00', '#ec4f43']) # Red
-# plt.contourf(fv.K, fv.W * fv.W, np.abs(fv.pi_delta(fv.K, fv.W, float(pf)).imag) > 1e-5,
-#     alpha=.2, cmap=cmap_pi)
+cmap_pi_delta = ListedColormap(['#ffffff00', '#ec4f43']) # Red
+plt.contourf(fv.K, fv.W * fv.W,
+    np.abs(fv.pi_delta(fv.K, fv.W, float(pf)).imag) > 1e-5,
+    alpha=.2, cmap=cmap_pi_delta)
 
 plt.contourf(fv.K, fv.W * fv.W,
     np.abs(fv.pi(fv.K, fv.W, float(pf)).imag) > 1e-5,

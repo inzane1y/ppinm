@@ -1,19 +1,18 @@
-// root_finding.c
+// find_pfc.c
 
 #include <math.h>
 #include <complex.h>
 #include <sys/stat.h>
 /* #include <unistd.h> */
 
-#include "list_double.h"
+#include "modules_c/list_double.h"
+#include "modules_c/functions.h"
 
 // Flags
 int RF_BISECT_NO_ROOTS = 0;
 
 // Function runtime parameters
 int rf_axis_imag = 0;
-FILE *rf_file_current_output;
-char rf_dir_name[100] = "graph_data";
 double (*rf_func)(double x, complex double y, double z);
 double rf_x0 = 0, rf_y0 = 0, rf_z0 = 0;
 double rf_prec_bisect = 1e-4;
@@ -83,45 +82,37 @@ list_double *rf_stripe_bisect_y(double y1, double y2)
     return roots;
 }
 
-void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
+int root_found(double x1, double x2, double y1, double y2)
 {
     rf_n_bisect = (int)(1. + log(rf_step_strip / rf_prec_bisect) / log(2));
-    double x = x1;
-    int branch_counter = 1;
-    int prev_used = -1;
-    char file_name[100];
+    rf_x0 = x1;
 
-    // This should probably be in a separate file
-    struct stat st = {0};
-    if (stat(rf_dir_name, &st) == -1)
-        mkdir(rf_dir_name, 0700);
-
-    sprintf(file_name, "%s/graph_data_%5.3lf_%d.txt", rf_dir_name, rf_z0, branch_counter);
-    rf_file_current_output = fopen(file_name, "w+");
-
-    while (x < x2)
+    while (rf_x0 < x2)
     {
-        rf_x0 = x;
         list_double *roots = rf_stripe_bisect_y(y1, y2);
-        if (roots->used != prev_used && prev_used != -1)
-        {
-            fclose(rf_file_current_output);
-            sprintf(file_name, "%s/graph_data_%5.3lf_%d.txt", rf_dir_name, rf_z0, ++branch_counter);
-            rf_file_current_output = fopen(file_name, "w+");
-        }
-        if (roots->used != 0)
-        {
-            fprintf(rf_file_current_output, "%lf", x);
-            list_double_file(rf_file_current_output, roots);
-        }
-        else // Rework this
-        {
-            fprintf(rf_file_current_output, "%lf\n", x);
-        }
 
-        x += rf_step_print;
-        prev_used = roots->used;
+        if (roots->used > 0)
+            return 1;
+
+        rf_x0 += rf_step_print;
         list_double_delete(&roots);
     }
-    fclose(rf_file_current_output);
+
+    return 0;
+}
+
+int main()
+{
+    rf_axis_imag = 1;
+    rf_step_print = 1e-3;
+    rf_step_strip = 1e-1;
+    rf_prec_bisect = 1e-2;
+    rf_z0 = 2.4;
+    rf_func = eq_pnd_as;
+    while (!root_found(1e-9, 2., 0., 4.) && rf_z0 < 2.7)
+        rf_z0 += 1e-4;
+
+    printf("%lf\n", rf_z0);
+
+    return 0;
 }

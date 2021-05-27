@@ -2,6 +2,7 @@
 
 #ifndef PROC_PART_H
 #define PROC_PART_H
+#include <complex.h>
 #include "proc_part.c"
 
 double pp_get_part(double complex (*func)(double, double complex, double),

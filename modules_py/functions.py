@@ -12,13 +12,22 @@ F_DELTA = 1.7
 F = 1
 W_DELTA = 2.1
 LAMBDA_N = 6
+M_STAR = .9
+P0 = 1.92
+G_MINUS = 1.6
 
 # Auxiliary functions
 def a(k, w):
     return w - k ** 2 / (2 * M)
 
+def a_corr(k, w):
+    return w - k ** 2 / (2. * M * M_STAR)
+
 def b(k, pf):
     return k * pf / M
+
+def b_corr(k, pf):
+    return k * pf / (M_STAR * M)
 
 def a_dw(w):
     return 1 # - w / M
@@ -56,6 +65,16 @@ def phi0_as_dw(k, w, pf):
     '''Asymptotic Migdal's function derivative.'''
     return a_dw(w) * n0(pf) / a(k, w) ** 2
 
+def phi1_corr(k, w, pf):
+    aa = a_corr(k, w)
+    bb = b_corr(k, pf)
+
+    return M_STAR ** 2 * M ** 2 / (2 * k ** 3 * pf) * ((aa ** 2 - \
+        bb ** 2) / 2. * np.log(0.j + (aa + bb) / (aa - bb)) - aa * bb)
+
+def phi_corr(k, w, pf):
+    return phi1_corr(k, w, pf) + phi1_corr(-k, -w, pf)
+
 # Main functions
 def pi(k, w, pf):
     '''Polarization operator for pNN interaction.'''
@@ -91,6 +110,10 @@ def pi_delta_as_dw(k, w, pf):
     '''Polarization operator for pND interaction asymptote derivative.'''
     return -16 / 9 * F_DELTA ** 2 * k ** 2 * \
         (phi0_as_dw(k, w - W_DELTA, pf) - phi0_as_dw(-k, -w - W_DELTA, pf))
+
+def pi_corr(k, w, pf):
+    return -2 * M_STAR * M * pf / (np.pi ** 2) * F ** 2 * k ** 2 * \
+        phi_corr(k, w, pf) / (1 + G_MINUS * pf / P0 * phi_corr(k, w, pf))
 
 def w_as(k, pf, branch=1):
     '''Asymptotic spectrum.'''
@@ -163,6 +186,11 @@ def eq(k, w, pf, pi_part=p.P_DFLT, pi_delta_part=p.P_DFLT):
     pi_tmp = p.part(pi, pi_part, k, w, pf)
     pi_delta_tmp = p.part(pi_delta, pi_delta_part, k, w, pf)
     return eq0(k, w) - pi_tmp - pi_delta_tmp
+
+def eq_corr_pnn(k, w, pf, pi_corr_part=p.P_DFLT):
+    pi_corr_tmp = p.part(pi_corr, pi_corr_part, k, w, pf)
+    eq0_tmp = p.part(eq0, pi_corr_part, k, w, pf)
+    return eq0_tmp - pi_corr_tmp
 
 def d0(k, w):
     '''Propagator for free pion.'''

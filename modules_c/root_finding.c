@@ -103,21 +103,23 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
     {
         rf_x0 = x;
         list_double *roots = rf_stripe_bisect_y(y1, y2);
+
+        if (roots->used == 0)
+        {
+            x += rf_step_print;
+            list_double_delete(&roots);
+            continue;
+        }
+
         if (roots->used != prev_used && prev_used != -1)
         {
             fclose(rf_file_current_output);
             sprintf(file_name, "%s/graph_data_%5.3lf_%d.txt", rf_dir_name, rf_z0, ++branch_counter);
             rf_file_current_output = fopen(file_name, "w+");
         }
-        if (roots->used != 0)
-        {
-            fprintf(rf_file_current_output, "%lf", x);
-            list_double_file(rf_file_current_output, roots);
-        }
-        else // Rework this
-        {
-            fprintf(rf_file_current_output, "%lf\n", x);
-        }
+
+        fprintf(rf_file_current_output, "%lf", x);
+        list_double_file(rf_file_current_output, roots);
 
         x += rf_step_print;
         prev_used = roots->used;

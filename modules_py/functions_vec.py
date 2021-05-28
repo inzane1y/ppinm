@@ -4,7 +4,7 @@ import modules_py.functions as f
 import numpy as np
 
 k = np.r_[1e-9:5:1000j]
-w = np.r_[1e-9:6:1000j]
+w = np.r_[1e-9:8:1000j]
 
 K, W = np.meshgrid(k, w)
 
@@ -19,6 +19,8 @@ pi_delta = np.vectorize(f.pi_delta, excluded=['pf'])
 pi_delta_as = np.vectorize(f.pi_delta_as, excluded=['pf'])
 pi_delta_dw = np.vectorize(f.pi_delta_dw, excluded=['pf'])
 pi_delta_as_dw = np.vectorize(f.pi_delta_as_dw, excluded=['pf'])
+
+pi_corr = np.vectorize(f.pi_corr, excluded=['pf'])
 
 w_as = np.vectorize(f.w_as, excluded=['branch', 'pf'])
 

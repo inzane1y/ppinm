@@ -11,6 +11,7 @@
 int RF_BISECT_NO_ROOTS = 0;
 
 // Function runtime parameters
+int branch_counter = 1;
 int rf_axis_imag = 0;
 FILE *rf_file_current_output;
 char rf_dir_name[100] = "graph_data";
@@ -87,7 +88,6 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
 {
     rf_n_bisect = (int)(1. + log(rf_step_strip / rf_prec_bisect) / log(2));
     double x = x1;
-    int branch_counter = 1;
     int prev_used = -1;
     char file_name[100];
 
@@ -96,7 +96,7 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
     if (stat(rf_dir_name, &st) == -1)
         mkdir(rf_dir_name, 0700);
 
-    sprintf(file_name, "%s/graph_data_%5.3lf_%d.txt", rf_dir_name, rf_z0, branch_counter);
+    sprintf(file_name, "%s/graph_data_%5.3lf_%d.txt", rf_dir_name, rf_z0, ++branch_counter);
     rf_file_current_output = fopen(file_name, "w+");
 
     while (x < x2)
@@ -108,6 +108,7 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
         {
             x += rf_step_print;
             list_double_delete(&roots);
+            prev_used = 0;
             continue;
         }
 
@@ -118,7 +119,7 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
             rf_file_current_output = fopen(file_name, "w+");
         }
 
-        fprintf(rf_file_current_output, "%lf", x);
+        fprintf(rf_file_current_output, "%.10lf", x);
         list_double_file(rf_file_current_output, roots);
 
         x += rf_step_print;

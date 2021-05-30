@@ -14,7 +14,7 @@
 #define G_MINUS 1.6
 
 // Runtime variables
-char funcs_param_part = 'd';
+char funcs_param_part = 'r';
 double M = 6.67;
 
 // Auxiliary functions
@@ -148,10 +148,10 @@ double eq_pnn_pnd(double k, double complex w, double pf)
     return eq0_tmp - pi_pnn_tmp - pi_pnd_tmp;
 }
 
-double eq_pnn_pnd_corr(double k, double complex w, double pf)
+double eq_pnn_pnd_as_corr(double k, double complex w, double pf)
 {
     double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
     double pi_pnn_corr_tmp = pp_get_part(pi_pnn_corr, funcs_param_part, k, w, pf);
-    double pi_pnd_corr_tmp = pp_get_part(pi_pnd, funcs_param_part, k, w, pf);
-    return eq0_tmp - pi_pnn_corr_tmp - pi_pnd_corr_tmp;
+    double pi_pnd_as_tmp = pp_get_part(pi_pnd_as, funcs_param_part, k, w, pf);
+    return eq0_tmp - pi_pnn_corr_tmp - pi_pnd_as_tmp;
 }

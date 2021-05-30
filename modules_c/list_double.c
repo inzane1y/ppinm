@@ -75,7 +75,7 @@ void list_double_file(FILE *file_output, list_double *ld)
 {
     int n = ld->used;
     for (int i = 0; i < n; i++)
-        fprintf(file_output, " %lf", ld->array[i]);
+        fprintf(file_output, " %.10lf", ld->array[i]);
     fprintf(file_output, "\n");
 }
 

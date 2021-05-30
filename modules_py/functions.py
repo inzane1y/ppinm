@@ -115,8 +115,11 @@ def pi_pnn_corr(k, w, pf):
     return -2 * M_STAR * M * pf / (np.pi ** 2) * F ** 2 * k ** 2 * \
         phi_corr(k, w, pf) / (1 + G_MINUS * pf / P0 * phi_corr(k, w, pf))
 
-def pi_pnn_pnd_as_corr(k, w, pf):
+def pi_pnn_corr_pnd_as(k, w, pf):
     return pi_pnn_corr(k, w, pf) + pi_pnd_as(k, w, pf)
+
+def pi_pnn_corr_pnd(k, w, pf):
+    return pi_pnn_corr(k, w, pf) + pi_pnd(k, w, pf)
 
 def w_as(k, pf, branch=1):
     '''Asymptotic spectrum.'''

@@ -3,8 +3,8 @@
 import modules_py.functions as f
 import numpy as np
 
-k = np.r_[1e-9:5:1000j]
-w = np.r_[1e-9:np.sqrt(.15):1000j]
+k = np.r_[1e-9:4:1000j]
+w = np.r_[1e-9:np.sqrt(1.2):1000j]
 
 K, W = np.meshgrid(k, w)
 
@@ -21,7 +21,8 @@ pi_pnd_dw = np.vectorize(f.pi_pnd_dw, excluded=['pf'])
 pi_pnd_as_dw = np.vectorize(f.pi_pnd_as_dw, excluded=['pf'])
 
 pi_pnn_corr = np.vectorize(f.pi_pnn_corr, excluded=['pf'])
-pi_pnn_pnd_as_corr = np.vectorize(f.pi_pnn_pnd_as_corr, excluded=['pf'])
+pi_pnn_corr_pnd_as = np.vectorize(f.pi_pnn_corr_pnd_as, excluded=['pf'])
+pi_pnn_corr_pnd = np.vectorize(f.pi_pnn_corr_pnd, excluded=['pf'])
 
 w_as = np.vectorize(f.w_as, excluded=['branch', 'pf'])
 

@@ -108,7 +108,6 @@ void rf_roots_to_file_y(double x1, double x2, double y1, double y2)
         {
             x += rf_step_print;
             list_double_delete(&roots);
-            prev_used = 0;
             continue;
         }
 

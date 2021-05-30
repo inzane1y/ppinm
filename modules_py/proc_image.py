@@ -106,13 +106,13 @@ def gen_title(func_name, pf):
     title = r'$\Re \left( \omega^2 - k^2 - 1'
     if 'pnn' in func_name:
         title += r'- \Pi_{\pi N N}'
-        if 'corr' in func_name:
+        if 'pnn_corr' in func_name:
             title += r'^{(corr)}'
         if 'pnn_as' in func_name:
             title += r'(as)'
     if 'pnd' in func_name:
         title += r'- \Pi_{\pi N \Delta}'
-        if 'corr' in func_name:
+        if 'pnd_corr' in func_name:
             title += r'^{(corr)}'
         if 'pnd_as' in func_name:
             title += r'(as)'

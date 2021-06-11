@@ -10,6 +10,13 @@
 // Flags
 int RF_BISECT_NO_ROOTS = 0;
 
+// Types
+typedef struct
+{
+    double bound_lower;
+    double bound_upper;
+} rf_bounds;
+
 // Function runtime parameters
 int branch_counter = 1;
 int rf_axis_imag = 0;
@@ -21,6 +28,8 @@ double rf_prec_bisect = 1e-4;
 double rf_step_strip = 1e-2;
 double rf_step_print = 1e-4;
 int rf_n_bisect = 1;
+rf_bounds *rf_bounds_array;
+int rf_bounds_number;
 
 double complex make_imag()
 {

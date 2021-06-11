@@ -3,8 +3,8 @@
 import modules_py.functions as f
 import numpy as np
 
-k = np.r_[1e-9:4:1000j]
-w = np.r_[1e-9:np.sqrt(1.2):1000j]
+k = np.r_[1e-9:5:1000j]
+w = np.r_[1e-9:8:1000j]
 
 K, W = np.meshgrid(k, w)
 
@@ -45,4 +45,5 @@ eq_pnn_pnd = np.vectorize(f.eq_pnn_pnd, excluded=['pf', 'pi_pnn_part', 'pi_pnd_p
 d0 = np.vectorize(f.d0)
 d_pnn = np.vectorize(f.d_pnn, excluded=['pf', 'width', 'pi_pnn_part'])
 d_pnd = np.vectorize(f.d_pnd, excluded=['pf', 'width', 'pi_pnd_part'])
+d_pnn_corr_pnd = np.vectorize(f.d_pnn_corr_pnd, excluded=['pf', 'width', 'part'])
 d = np.vectorize(f.d, excluded=['pf', 'width', 'pi_pnn_part', 'pi_pnd_part'])

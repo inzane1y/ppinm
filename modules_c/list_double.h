@@ -9,4 +9,5 @@ list_double *list_double_create(size_t size);
 void list_double_delete(list_double **ld);
 int list_double_print(list_double *ld);
 void list_double_file(FILE *file_output, list_double *ld);
+void list_double_file_experimental(FILE *file_output, list_double *ld);
 #endif

@@ -1,5 +1,6 @@
 // functions.c
 
+#include <stdio.h>
 #include <math.h>
 #include <complex.h>
 #include "proc_part.h"
@@ -7,20 +8,27 @@
 // Macros
 /* #define M 6.67 */
 #define F_DELTA 1.7
-#define F 1.
+#define F 1.0
 #define W_DELTA 2.1
-#define M_STAR .9
+#define M_STAR 0.9
 #define P0 1.92
-#define G_MINUS 1.6
 
 // Runtime variables
 char funcs_param_part = 'r';
 double M = 6.67;
+double M_DELTA = 8.8;
+double G_MINUS = 1.6;
+double G_DELTA = 0.2;
+
+double n(double pf)
+{
+    return 2 * pf * pf * pf / (3 * M_PI * M_PI * 0.47);
+}
 
 // Auxiliary functions
 double complex a(double k, double complex w)
 {
-    return w - k * k / (2. * M);
+    return w - k * k / (2.0 * M);
 }
 
 double b(double k, double pf)
@@ -30,12 +38,12 @@ double b(double k, double pf)
 
 double w0(double k)
 {
-    return sqrt(1. + k * k);
+    return sqrt(1.0 + k * k);
 }
 
 double n0(double pf)
 {
-    return pf * pf * pf / (6. * M_PI * M_PI);
+    return pf * pf * pf / (6.0 * M_PI * M_PI);
 }
 
 // Main building blocks
@@ -44,22 +52,22 @@ double complex phi0(double k, double complex w, double pf)
     double complex aa = a(k, w);
     double bb = b(k, pf);
 
-    return M * M * M / (k * k * k * 4. * M_PI * M_PI) * ((aa * aa - 
-        bb * bb) / 2. * clog(0. * I + (aa + bb) / (aa - bb)) - aa * bb);
+    return M * M * M / (k * k * k * 4.0 * M_PI * M_PI) * ((aa * aa - 
+        bb * bb) / 2.0 * clog(0.0 * I + (aa + bb) / (aa - bb)) - aa * bb);
 }
 
-double complex phi1_corr(double k, double complex w, double pf)
+double complex phi1_pnn_corr(double k, double complex w, double pf)
 {
     double complex aa = a(k, w);
     double bb = b(k, pf);
 
-    return M * M / (2 * k * k * k * pf) * ((aa * aa - 
-        bb * bb) / 2. * clog(0. * I + (aa + bb) / (aa - bb)) - aa * bb);
+    return M * M / (2.0 * k * k * k * pf) * ((aa * aa - 
+        bb * bb) / 2.0 * clog(0.0 * I + (aa + bb) / (aa - bb)) - aa * bb);
 }
 
-double complex phi_corr(double k, double complex w, double pf)
+double complex phi_pnn_corr(double k, double complex w, double pf)
 {
-    return phi1_corr(k, w, pf) + phi1_corr(-k, -w, pf);
+    return phi1_pnn_corr(k, w, pf) + phi1_pnn_corr(-k, -w, pf);
 }
 
 double complex phi0_as(double k, double complex w, double pf)
@@ -70,32 +78,33 @@ double complex phi0_as(double k, double complex w, double pf)
 // Main functions
 double complex pi_pnn(double k, double complex w, double pf)
 {
-    return -4. * F * F * k * k * 
+    return -4.0 * F * F * k * k * 
         (phi0(k, w, pf) + phi0(-k, -w, pf));
 }
 
 double complex pi_pnn_as(double k, double complex w, double pf)
 {
-    return -4. * F * F * k * k * 
+    return -4.0 * F * F * k * k * 
         (phi0_as(k, w, pf) + phi0_as(-k, -w, pf));
 }
 
 double complex pi_pnd(double k, double complex w, double pf)
 {
-    return -16. / 9. * F_DELTA * F_DELTA * k * k *
-        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf));
+    return -16.0 / 9.0 * F_DELTA * F_DELTA * k * k *
+        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf)) /
+        (1.0 + 0.23 * k * k);
 }
 
 double complex pi_pnd_as(double k, double complex w, double pf)
 {
-    return -16. / 9. * F_DELTA * F_DELTA * k * k *
+    return -16.0 / 9.0 * F_DELTA * F_DELTA * k * k *
         (phi0_as(k, w - W_DELTA, pf) + phi0_as(-k, -w - W_DELTA, pf));
 }
 
 double complex pi_pnn_corr(double k, double complex w, double pf)
 {
-    return -2 * M * pf / (M_PI * M_PI) * F * F * k * k * 
-        phi_corr(k, w, pf) / (1 + G_MINUS * pf / P0 * phi_corr(k, w, pf));
+    return -2.0 * M * pf / (M_PI * M_PI) * F * F * k * k * 
+        phi_pnn_corr(k, w, pf) / (1.0 + G_MINUS * pf / P0 * phi_pnn_corr(k, w, pf));
 }
 
 // Convenience functions

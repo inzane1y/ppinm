@@ -7,18 +7,22 @@ import modules_py.proc_part as p
 # _as === asymptote
 
 # Parameters
-M = 6.67 * .9 # .9 === M_STAR
+M = 6.67 * 0.9 # 0.9 === M_STAR
 F_DELTA = 1.7
 F = 1
 W_DELTA = 2.1
-LAMBDA_N = 6
-M_STAR = .9
+LAMBDA_N = 6.0
+M_STAR = 0.9
 P0 = 1.92
-G_MINUS = 1.6
+G_MINUS = 2.0
+G_DELTA = 0.8
 
 # Auxiliary functions
 def a(k, w):
     return w - k ** 2 / (2 * M)
+
+def a_new(k, w):
+    return w + k * k / (2.0 * M);
 
 def b(k, pf):
     return k * pf / M
@@ -64,8 +68,15 @@ def phi1_corr(k, w, pf):
     aa = a(k, w)
     bb = b(k, pf)
 
-    return a_dw(w) * M ** 2 / (2 * k ** 3 * pf) * ((aa ** 2 - \
+    return M ** 2 / (2 * k ** 3 * pf) * ((aa ** 2 - \
         bb ** 2) / 2. * np.log(0.j + (aa + bb) / (aa - bb)) - aa * bb)
+
+def phi1_pnd_corr(k, w, pf):
+    aa = a_new(k, w);
+    bb = b(k, pf);
+
+    return -M * M / (2.0 * k * k * k * pf) * ((aa * aa - bb * bb) /
+        2.0 * np.log(0.0j  + (aa + bb) / (aa - bb)) - aa * bb);
 
 def phi1_corr_dw(k, w, pf):
     '''Migdal's function for correlations derivative.'''
@@ -75,6 +86,14 @@ def phi1_corr_dw(k, w, pf):
     return M ** 2 / (2 * k ** 3 * pf) * \
         (aa * np.log(0j + (aa + bb) / (aa - bb)) - 2 * bb)
 
+def phi1_pnd_corr_dw(k, w, pf):
+    '''Migdal's function for pND correlations derivative.'''
+    aa = a_new(k, w)
+    bb = b(k, pf)
+    
+    return -M ** 2 / (2 * k ** 3 * pf) * \
+        (aa * np.log(0j + (aa + bb) / (aa - bb)) - 2 * bb)
+
 def phi_corr(k, w, pf):
     '''Lindhard's function for correlations.'''
     return phi1_corr(k, w, pf) + phi1_corr(-k, -w, pf)
@@ -82,6 +101,20 @@ def phi_corr(k, w, pf):
 def phi_corr_dw(k, w, pf):
     '''Lindhard's function for correlations derivative.'''
     return phi1_corr_dw(k, w, pf) - phi1_corr_dw(-k, -w, pf)
+
+def phi_pnd_corr(k, w, pf):
+    return phi1_pnd_corr(k, -w + W_DELTA, pf) + phi1_pnd_corr(-k, w + W_DELTA, pf);
+
+def phi_pnd_corr_dw(k, w, pf):
+    return -phi1_pnd_corr_dw(k, -w + W_DELTA, pf) + phi1_pnd_corr_dw(-k, w + W_DELTA, pf);
+
+def a_delta(k, w, pf):
+    return M * pf / (np.pi * np.pi * (1.0 + 0.23 * k * k)) * \
+        phi_pnd_corr(k, w, pf);
+
+def a_delta_dw(k, w, pf):
+    return M * pf / (np.pi * np.pi * (1.0 + 0.23 * k * k)) * \
+        phi_pnd_corr_dw(k, w, pf);
 
 # Main functions
 def pi_pnn(k, w, pf):
@@ -102,7 +135,8 @@ def pi_pnn_dw(k, w, pf):
 def pi_pnd(k, w, pf):
     '''Polarization operator for pND interaction.'''
     return -16 / 9 * F_DELTA ** 2 * k ** 2 * \
-        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf))
+        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf)) / \
+        (1 + 0.23 * k ** 2)
 
 def pi_pnd_as(k, w, pf):
     '''Polarization operator for pND interaction asymptote.'''
@@ -112,7 +146,8 @@ def pi_pnd_as(k, w, pf):
 def pi_pnd_dw(k, w, pf):
     '''Polarization operator for pND interaction derivative.'''
     return -16 / 9 * F_DELTA ** 2 * k ** 2 * \
-        (phi0_dw(k, w - W_DELTA, pf) - phi0_dw(-k, -w - W_DELTA, pf))
+        (phi0_dw(k, w - W_DELTA, pf) - phi0_dw(-k, -w - W_DELTA, pf)) / \
+        (1 + 0.23 * k ** 2)
 
 def pi_pnd_as_dw(k, w, pf):
     '''Polarization operator for pND interaction asymptote derivative.'''
@@ -138,6 +173,20 @@ def pi_pnn_corr_pnd(k, w, pf):
 
 def pi_pnn_corr_pnd_dw(k, w, pf):
     return pi_pnn_corr_dw(k, w, pf) + pi_pnd_dw(k, w, pf)
+
+def pi_pnd_corr(k, w, pf):
+    return -64.0 / 25.0 * F * F * k * k * a_delta(k, w, pf) / \
+        (1.0 + G_DELTA * phi_pnd_corr(k, w, pf));
+
+def pi_pnd_corr_dw(k, w, pf):
+    return -64.0 / 25.0 * F * F * k * k * M * pf / (np.pi * np.pi * (1.0 + 0.23 * k * k)) * \
+        phi_pnd_corr_dw(k, w, pf) / (1 + G_DELTA * phi_pnd_corr(k, w, pf)) ** 2
+
+def pi_pnn_corr_pnd_corr(k, w, pf):
+    return pi_pnn_corr(k, w, pf) + pi_pnd_corr(k, w, pf)
+
+def pi_pnn_corr_pnd_corr_dw(k, w, pf):
+    return pi_pnn_corr_dw(k, w, pf) + pi_pnd_corr_dw(k, w, pf)
 
 def w_as(k, pf, branch=1):
     '''Asymptotic spectrum.'''
@@ -203,7 +252,7 @@ def eq_pnn_as(k, w, pf):
 def eq_pnd(k, w, pf, pi_pnd_part=p.P_DFLT):
     '''Equation for pND interaction.'''
     pi_pnd_tmp = p.part(pi_pnd, pi_pnd_part, k, w, pf)
-    return eq0(k, w) - pi_pnd_tmp
+    return eq0(k, w) - pi_pnd(k, w, pf)
 
 def eq_pnn_pnd(k, w, pf, part=p.P_DFLT):
     '''Equation with all interactions.'''
@@ -223,6 +272,12 @@ def eq_pnn_corr_pnd(k, w, pf, part=p.P_DFLT):
     pi_pnd_tmp = p.part(pi_pnd, part, k, w, pf)
     return eq0_tmp - pi_pnn_corr_tmp - pi_pnd_tmp
 
+def eq_pnn_corr_pnd_corr(k, w, pf, part=p.P_DFLT):
+    eq0_tmp = p.part(eq0, part, k, w)
+    pi_pnn_corr_tmp = p.part(pi_pnn_corr, part, k, w, pf)
+    pi_pnd_corr_tmp = p.part(pi_pnd_corr, part, k, w, pf)
+    return eq0_tmp - pi_pnn_corr_tmp - pi_pnd_corr_tmp
+
 def d0(k, w):
     '''Propagator for free pion.'''
     return 1 / eq0(k, w)
@@ -236,12 +291,22 @@ def d_pnn_corr(k, w, pf, width=1e-2, part=p.P_DFLT):
     return 1 / (eq_pnn_corr(k, w, pf, part=part) - 1j * width)
 
 def d_pnn_corr_pnd(k, w, pf, part=p.P_DFLT, width=1e-2):
-    return 1 / (eq_pnn_corr_pnd(k, w, pf, part=part) - 1j * width)
+    return 1 / (eq_pnn_corr_pnd(k, w, pf, part=part) \
+        # + 2j * pi_pnd(k, w, pf).imag \
+        - 1j * width)
 
 def d_pnd(k, w, pf, width=1e-2, pi_pnd_part=p.P_DFLT):
     '''Propagator for pND interacting pion.'''
-    return 1 / (eq_pnd(k, w, pf, pi_pnd_part=pi_pnd_part) - 1j * width)
+    return 1 / (eq_pnd(k, w, pf, pi_pnd_part=pi_pnd_part) \
+        # + 2j * pi_pnd(k, w, pf).imag \
+        - 1j * width)
 
-def d(k, w, pf, width=1e-2, pi_pnn_part=p.P_DFLT, pi_pnd_part=p.P_DFLT):
+def d(k, w, pf, width=1e-2, part=p.P_DFLT):
     '''Propagator for pion in total.'''
-    return 1 / (eq_pnn_pnd(k, w, pf, pi_pnn_part=pi_pnn_part, pi_pnd_part=pi_pnd_part) - 1j * width)
+    return 1 / (eq_pnn_pnd(k, w, pf, part=part) - 1j * width)
+
+def d_pnn_corr_pnd_corr(k, w, pf, width=1e-2, part=p.P_DFLT):
+    return 1 / (eq_pnn_corr_pnd_corr(k, w, pf, part=part) \
+        # + 2j * pi_pnn_corr(k, w, pf).imag \
+        + 2j * pi_pnd_corr(k, w, pf).imag \
+        - 1j * width)

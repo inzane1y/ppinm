@@ -30,17 +30,18 @@ int root_found(double x1, double x2, double y1, double y2)
 int main() // 0.3 expected
 {
     rf_axis_imag = 1;
-    rf_func = eq_pnn_corr_pnd;
+    rf_func = eq_pnn_corr_pnd_corr;
     rf_step_print = 1e-1;
     rf_step_strip = 1e-2;
     rf_n_bisect = (int)(1.0 + log(rf_step_strip / rf_prec_bisect) / log(2.0));
 
     M *= 0.9;
-    G_MINUS = 2.0;
-    rf_z0 = 0.20;
+    /* G_MINUS = 2.0; */
+    /* G_DELTA = 0.0; */
+    rf_z0 = 0.01;
     while (!root_found(1e-9, 5.0, 0.0, 1.0))
         rf_z0 += 1e-2;
 
-    printf("n(crit) = %.2f n0\n", n(rf_z0));
+    printf("n(crit) = %.2f n0\npf(crit) = %.2f\n", n(rf_z0), rf_z0);
     return 0;
 }

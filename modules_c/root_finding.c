@@ -24,7 +24,7 @@ FILE *rf_file_current_output;
 char rf_dir_name[100] = "graph_data";
 double (*rf_func)(double x, complex double y, double z);
 double rf_x0 = 0, rf_y0 = 0, rf_z0 = 0;
-double rf_prec_bisect = 1e-4;
+double rf_prec_bisect = 1e-8;
 double rf_step_strip = 1e-2;
 double rf_step_print = 1e-4;
 int rf_n_bisect = 1;
@@ -67,6 +67,7 @@ double rf_double_bisect_y(double y1_arg, double y2_arg)
 
     if (fabs(f_m) > 1.)
         RF_BISECT_NO_ROOTS = 1;
+
     if (rf_axis_imag)
         return cimag(y1 + y2) / 2.;
     return creal(y1 + y2) / 2.;

@@ -49,15 +49,15 @@ int main(int argc, char **argv)
 {
     M *= 0.9;
 
-    sprintf(func_name, "_unity_eq_pnn_corr_pnd_corr");
+    sprintf(func_name, "eq_pnn_corr_pnd_corr");
     rf_func = eq_pnn_corr_pnd_corr;
 
-    pf = 2.43; // 1.52, 1.91, 2.19, 2.40
+    pf = 0.05; // 1.52, 1.91, 2.19, 2.40
 
     /* G_DELTA = 0.0; */
-    go(1e-1, 1e-5, 1e-9, 5.0, 0.0, 6.0); // unity
+    /* go(1e-1, 1e-5, 1e-9, 5.0, 0.0, 6.0); // unity */
 
-    /* go(1e-2, 1e-4, 1e-9, 5.0, 0.0, 8.0); */
+    go(1e-1, 1e-5, 1e-9, 8.0, 0.0, 10.0);
     /* go(1e-2, 1e-6, 1e-9, 0.625, 0.0, 2.5); */
     /* go(1e-2, 1e-4, 0.625, 5.0, 0.0, 6.0); */
 

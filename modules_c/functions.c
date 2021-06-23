@@ -12,11 +12,11 @@
 #define W_DELTA 2.1
 #define M_STAR 0.9
 #define P0 1.92
+#define LAMBDA 6.0
 
 // Runtime variables
 char funcs_param_part = 'r';
 double M = 6.67;
-double M_DELTA = 8.8;
 double G_MINUS = 2.0;
 double G_DELTA = 0.8;
 
@@ -116,8 +116,8 @@ double complex pi_pnn_as(double k, double complex w, double pf)
 double complex pi_pnd(double k, double complex w, double pf)
 {
     return -16.0 / 9.0 * F_DELTA * F_DELTA * k * k *
-        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf)) /
-        (1.0 + 0.23 * k * k);
+        (phi0(k, w - W_DELTA, pf) + phi0(-k, -w - W_DELTA, pf));// /
+        /* (1.0 + 0.23 * k * k); */
 }
 
 double complex pi_pnd_as(double k, double complex w, double pf)
@@ -132,10 +132,24 @@ double complex pi_pnn_corr(double k, double complex w, double pf)
         phi_pnn_corr(k, w, pf) / (1.0 + G_MINUS * pf / P0 * phi_pnn_corr(k, w, pf));
 }
 
+double complex pi_pnn_corr_ff(double k, double complex w, double pf)
+{
+    return -2.0 * M * pf / (M_PI * M_PI) * F * F * k * k * 
+        phi_pnn_corr(k, w, pf) / (1.0 + G_MINUS * pf / P0 * phi_pnn_corr(k, w, pf)) *
+        exp(-2.0 * k * k / (LAMBDA * LAMBDA));
+}
+
 double complex pi_pnd_corr(double k, double complex w, double pf)
 {
     return -64.0 / 25.0 * F * F * k * k * a_delta(k, w, pf) /
         (1.0 + G_DELTA * phi_pnd_corr(k, w, pf));
+}
+
+double complex pi_pnd_corr_ff(double k, double complex w, double pf)
+{
+    return -64.0 / 25.0 * F * F * k * k * a_delta(k, w, pf) /
+        (1.0 + G_DELTA * phi_pnd_corr(k, w, pf)) *
+        exp(-2.0 * k * k / (LAMBDA * LAMBDA));
 }
 
 // Convenience functions
@@ -210,4 +224,12 @@ double eq_pnn_corr_pnd_corr(double k, double complex w, double pf)
     double pi_pnn_corr_tmp = pp_get_part(pi_pnn_corr, funcs_param_part, k, w, pf);
     double pi_pnd_corr_tmp = pp_get_part(pi_pnd_corr, funcs_param_part, k, w, pf);
     return eq0_tmp - pi_pnn_corr_tmp - pi_pnd_corr_tmp;
+}
+
+double eq_pnn_corr_ff_pnd_corr_ff(double k, double complex w, double pf)
+{
+    double eq0_tmp = pp_get_part(eq0, funcs_param_part, k, w, pf);
+    double pi_pnn_corr_ff_tmp = pp_get_part(pi_pnn_corr_ff, funcs_param_part, k, w, pf);
+    double pi_pnd_corr_ff_tmp = pp_get_part(pi_pnd_corr_ff, funcs_param_part, k, w, pf);
+    return eq0_tmp - pi_pnn_corr_ff_tmp - pi_pnd_corr_ff_tmp;
 }

@@ -20,6 +20,7 @@ double complex pi_pnn_as(double k, double complex w, double pf);
 double complex pi_pnd(double k, double complex w, double pf);
 double complex pi_pnd_as(double k, double complex w, double pf);
 double complex pi_pnn_corr(double k, double complex w, double pf);
+double complex pi_pnn_corr_ff(double k, double complex w, double pf);
 double complex eq0(double k, double complex w, double pf);
 double eq_pnd(double k, double complex w, double pf);
 double eq_pnd_as(double k, double complex w, double pf);
@@ -35,5 +36,7 @@ double phi1_pnd_corr(double k, double complex w, double pf);
 double complex phi_pnd_corr(double k, double complex w, double pf);
 double complex a_delta(double k, double complex w, double pf);
 double complex pi_pnd_corr(double k, double complex w, double pf);
+double complex pi_pnd_corr_ff(double k, double complex w, double pf);
 double eq_pnn_corr_pnd_corr(double k, double complex w, double pf);
+double eq_pnn_corr_ff_pnd_corr_ff(double k, double complex w, double pf);
 #endif

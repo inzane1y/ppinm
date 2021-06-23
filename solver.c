@@ -47,21 +47,23 @@ void go_i(double step_k, double step_w, double k1, double k2, double w1, double 
 
 int main(int argc, char **argv)
 {
-    M *= 0.9;
+    /* M *= 0.9; */
 
-    sprintf(func_name, "eq_pnn_corr_pnd_corr");
-    rf_func = eq_pnn_corr_pnd_corr;
+    sprintf(func_name, "eq_pnn");
+    rf_func = eq_pnn;
 
-    pf = 0.05; // 1.52, 1.91, 2.19, 2.40
+    pf = 2.6; // 1.52, 1.91, 2.19, 2.40
 
-    /* G_DELTA = 0.0; */
     /* go(1e-1, 1e-5, 1e-9, 5.0, 0.0, 6.0); // unity */
+    /* go(1e-2, 1e-4, 1e-9, 0.1, 0.999, 1.5); // alpha */
 
-    go(1e-1, 1e-5, 1e-9, 8.0, 0.0, 10.0);
-    /* go(1e-2, 1e-6, 1e-9, 0.625, 0.0, 2.5); */
-    /* go(1e-2, 1e-4, 0.625, 5.0, 0.0, 6.0); */
+    go(1e-3, 1e-5, 1e-4, 0.2, 0.0, 0.5); // spin-sound
+    go(1e-3, 1e-5, 1e-4, 0.2, 0.8, 1.2); // pi
+    /* go(1e-3, 1e-5, 1e-4, 0.2, 2.0, 2.8); // delta */
 
-    /* go(5e-3, 5e-6, 1e-9, 0.1, 0.999, 1.5); // alpha */
+    go(1e-3, 1e-3, 0.2, 5.0, 0.0, 6.0); // other
+
+    go_i(1e-3, 1e-3, 1e-4, 5.0, 0.0, 2.0);
 
     return 0;
 }

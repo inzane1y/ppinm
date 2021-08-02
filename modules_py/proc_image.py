@@ -8,8 +8,8 @@ import os
 
 from matplotlib.colors import ListedColormap
 
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
 
 cmap_pi_pnn = ListedColormap(['#ffffff00', '#a1ae25']) # Green
 cmap_pi_pnd = ListedColormap(['#ffffff00', '#ec4f43']) # Red
@@ -42,6 +42,22 @@ def plot(file_dir, label=None, ls=None, color=color_black):
                 plt.plot(x, y, ls=ls, color=color)
             else:
                 plt.plot(x, y, ls=ls, color=color, label=label)
+                flag_label_present = True
+
+def plot_new(file_dir, pf, label=None, ls=None, color=color_black):
+    flag_label_present = False
+    filenames = os.listdir(file_dir)
+    for filename in filenames:
+        x, Y = pd.gen_data(file_dir + '/' + filename)
+        for y in Y:
+            condition = np.abs(fv.d_pnd(x, y, pf, width=0).imag) == 0
+            not_condition = np.invert(condition)
+            if flag_label_present:
+                plt.plot(x[condition], y[condition], ls='-', color=color)
+                plt.plot(x[not_condition], y[not_condition], ls=':', color=color)
+            else:
+                plt.plot(x[condition], y[condition], ls='-', color=color, label=label)
+                plt.plot(x[not_condition], y[not_condition], ls=':', color=color)
                 flag_label_present = True
 
 def plot_2(file_dir, pf, condition_function, label_r=None,

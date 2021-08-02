@@ -8,7 +8,10 @@ import modules_py.aux as aux
 import numpy as np
 import matplotlib.pyplot as plt
 
-pf = 1.52
+plt.style.use('publication23.mplstyle')
+
+f.M = 6.67
+pf = 1.49
 fv.k = np.r_[1e-9:5:2500j]
 fv.w = np.r_[0:6:2500j]
 
@@ -65,13 +68,15 @@ plt.plot(fv.k, w_lower_bound_lower, color=line_max_d_bound[0].get_color())
 plt.fill_between(fv.k[20:], w_lower_bound_upper[20:],
     w_lower_bound_lower[20:], color=color_ligh_pink, alpha=alpha_fill_bound)
 
-pi.plot('graph_data_eq_pnd_real', label=r'$\omega(k)$', color=color_dark_grey)
+pi.plot('./graph_data/eq_pnd/1.490', label=r'$\omega(k)$', color=color_dark_grey)
 
 plt.plot(fv.k, fv.w_as(fv.k, pf, branch=1), color=color_dark_grey,
     label=r'$\omega^{(as)}(k)$', ls='dotted')
 plt.plot(fv.k, fv.w_as(fv.k, pf, branch=-1), color=color_dark_grey, ls='dotted')
 
-plt.title(r'Spectrum with real part, $p_F = 1.52$')
+# plt.title(r'Spectrum with real part, $p_F = 1.52$')
 plt.xlabel(r'$k$')
 plt.ylabel(r'$\omega$')
-pi.show('figures/spectrum_1.52')
+plt.legend()
+plt.show()
+# pi.show()#'figures/spectrum_1.52')

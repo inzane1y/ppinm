@@ -7,18 +7,17 @@ import modules_py.proc_part as p
 # _as === asymptote
 
 # Parameters
-M = 6.67 * 0.9 # 0.9 === M_STAR
+M = 6.67 * 0.9
 F_DELTA = 1.7
 F = 1
 W_DELTA = 2.1
 LAMBDA = 6.0
-M_STAR = 0.9
-P0 = 1.92
-G_MINUS = 2.0
+P0 = 1.88
+G_MINUS = 1.6
 G_DELTA = 0.8
 
 def n(pf):
-    return 2 * pf * pf * pf / (3 * np.pi * np.pi * 0.47)
+    return 2 * pf * pf * pf / (3 * np.pi * np.pi * 0.45)
 
 # Auxiliary functions
 def a(k, w):
@@ -194,17 +193,18 @@ def pi_pnd_corr(k, w, pf):
 
 def pi_pnd_corr_ff(k, w, pf):
     return -64.0 / 25.0 * F * F * k * k * a_delta(k, w, pf) / \
-        (1.0 + G_DELTA * phi_pnd_corr(k, w, pf)) * \
+        (1.0 + np.exp(-2 * k ** 2 / LAMBDA ** 2) * G_DELTA * pf / P0 * phi_pnd_corr(k, w, pf)) * \
         np.exp(-2 * k ** 2 / LAMBDA ** 2)
 
 def pi_pnd_corr_ff_dw(k, w, pf):
     return -64.0 / 25.0 * F * F * k * k * M * pf / (np.pi * np.pi * (1.0 + 0.23 * k * k)) * \
-        phi_pnd_corr_dw(k, w, pf) / (1 + G_DELTA * phi_pnd_corr(k, w, pf)) ** 2 * \
+        phi_pnd_corr_dw(k, w, pf) / (1 + np.exp(-2 * k ** 2 / LAMBDA ** 2) * \
+        G_DELTA * pf / P0 * phi_pnd_corr(k, w, pf)) ** 2 * \
         np.exp(-2 * k ** 2 / LAMBDA ** 2)
 
 def pi_pnd_corr_dw(k, w, pf):
     return -64.0 / 25.0 * F * F * k * k * M * pf / (np.pi * np.pi * (1.0 + 0.23 * k * k)) * \
-        phi_pnd_corr_dw(k, w, pf) / (1 + G_DELTA * phi_pnd_corr(k, w, pf)) ** 2
+        phi_pnd_corr_dw(k, w, pf) / (1 + G_DELTA * pf / P0 * phi_pnd_corr(k, w, pf)) ** 2
 
 def pi_pnn_corr_pnd_corr(k, w, pf):
     return pi_pnn_corr(k, w, pf) + pi_pnd_corr(k, w, pf)
@@ -311,9 +311,9 @@ def eq_pnn_corr_ff_pnd_corr_ff(k, w, pf, part=p.P_DFLT):
     pi_pnd_corr_ff_tmp = p.part(pi_pnd_corr_ff, part, k, w, pf)
     return eq0_tmp - pi_pnn_corr_ff_tmp - pi_pnd_corr_ff_tmp
 
-def d0(k, w):
+def d0(k, w, width=1e-2):
     '''Propagator for free pion.'''
-    return 1 / eq0(k, w)
+    return 1 / (eq0(k, w) - 1j * width)
 
 def d_pnn(k, w, pf, width=1e-2, pi_pnn_part=p.P_DFLT):
     '''Propagator for pNN interacting pion.'''

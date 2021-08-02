@@ -65,7 +65,7 @@ double rf_double_bisect_y(double y1_arg, double y2_arg)
         f_m = rf_func(rf_x0, m, rf_z0);
     }
 
-    if (fabs(f_m) > 1.)
+    if (fabs(f_m) > 1e-2)
         RF_BISECT_NO_ROOTS = 1;
 
     if (rf_axis_imag)

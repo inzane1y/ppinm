@@ -27,10 +27,10 @@ int root_found(double x1, double x2, double y1, double y2)
     return 0;
 }
 
-int main() // 0.3 expected
+int main()
 {
     rf_axis_imag = 1;
-    rf_func = eq_pnn_corr;
+    rf_func = eq_pnn_corr_ff_pnd_corr_ff;
     rf_step_print = 1e-1;
     rf_step_strip = 1e-2;
     rf_n_bisect = (int)(1.0 + log(rf_step_strip / rf_prec_bisect) / log(2.0));
